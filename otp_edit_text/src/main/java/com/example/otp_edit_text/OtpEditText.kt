@@ -53,6 +53,14 @@ class OtpEditText : ConstraintLayout {
         return inputOTP1.text.toString() + inputOTP2.text.toString() + inputOTP3.text.toString() + inputOTP4.text.toString()
     }
 
+    fun Clear(){
+        inputOTP1.setText("")
+        inputOTP2.setText("")
+        inputOTP3.setText("")
+        inputOTP4.setText("")
+        inputOTP1.requestFocus()
+    }
+
     inner class EditTextWatcher(private val editText: EditText) : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -60,12 +68,82 @@ class OtpEditText : ConstraintLayout {
 
         override fun afterTextChanged(p0: Editable?) {
             val text = p0.toString()
+            val textid = editText.id
 
-            when (editText.id) {
-                R.id.Text1 -> if (text.length == 1) inputOTP2.requestFocus()
-                R.id.Text2 -> if (text.length == 1) inputOTP3.requestFocus() else if (text.isEmpty()) inputOTP1.requestFocus()
-                R.id.Text3 -> if (text.length == 1) inputOTP4.requestFocus() else if (text.isEmpty()) inputOTP2.requestFocus()
-                R.id.Text4 -> if (text.isEmpty()) inputOTP3.requestFocus()
+            if(textid==R.id.Text1){
+                if(text.length==1){
+                    if(inputOTP2.text.isEmpty())
+                        inputOTP2.requestFocus()
+                    else if(inputOTP3.text.isEmpty())
+                        inputOTP3.requestFocus()
+                    else
+                        inputOTP4.requestFocus()
+                }
+                else if(text.length>1){
+                    val otp = text
+                    inputOTP1.setText(otp[0].toString())
+
+                    if(text.length==3){
+                        inputOTP2.setText(otp[1].toString())
+                        inputOTP3.setText(otp[2].toString())
+                        inputOTP4.requestFocus()
+                    }else if(text.length==4){
+                        inputOTP2.setText(otp[1].toString())
+                        inputOTP3.setText(otp[2].toString())
+                        inputOTP4.setText(otp[3].toString())
+                        inputOTP4.setSelection(inputOTP4.text.length)
+                    }else if(inputOTP2.text.isEmpty()){
+                        inputOTP2.setText(otp[1].toString())
+                        inputOTP3.requestFocus()
+                    }else if(inputOTP3.text.isEmpty())
+                        inputOTP3.requestFocus()
+                    else
+                        inputOTP4.requestFocus()
+                }
+            }
+
+            if(textid==R.id.Text2){
+                if(text.length==1){
+                    if(inputOTP3.text.isEmpty())
+                        inputOTP3.requestFocus()
+                    else
+                        inputOTP4.requestFocus()
+                }else if(text.length>1){
+                    val otp = text
+                    inputOTP2.setText(otp[0].toString())
+                    if(inputOTP3.text.isEmpty()){
+                        inputOTP3.setText(otp[1].toString())
+                    }
+                    inputOTP4.requestFocus()
+                }
+                else if (text.isEmpty() && inputOTP3.text.isEmpty()){
+                    inputOTP1.requestFocus()
+                    inputOTP1.setSelection(inputOTP1.text.length)
+                }
+            }
+
+            if(textid==R.id.Text3){
+                if(text.length==1){
+                    inputOTP4.requestFocus()
+                }
+                else if(text.length>1){
+                    val otp = text
+                    inputOTP3.setText(otp[0].toString())
+                    if(inputOTP4.text.isEmpty()){
+                        inputOTP4.setText(otp[1].toString())
+                    }
+                    inputOTP4.requestFocus()
+                }
+                else if (text.isEmpty() && inputOTP4.text.isEmpty()){
+                    inputOTP2.requestFocus()
+                    inputOTP2.setSelection(inputOTP2.text.length)
+                }
+            }
+
+            if(textid==R.id.Text4){
+                if(text.isEmpty()){
+                    inputOTP3.requestFocus()
+                }
             }
         }
     }
